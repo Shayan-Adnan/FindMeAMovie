@@ -1,7 +1,7 @@
 # FindMeAMovie
 Find Me A Movie is a web application that helps users quickly discover movies based on their preferences. Whether you're looking for a specific genre, runtime, or streaming availability, it makes movie selection easy and hassle-free.
 
-This app was made using React and TailwindCSS and is powered by the TMDB API. 
+This app was made using React and Tailwind CSS and is powered by TMDB API. 
 
 I have plans to add a LOT more features to this app in the future. Currently, it contains the following features:
 

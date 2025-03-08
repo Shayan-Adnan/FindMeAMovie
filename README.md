@@ -6,12 +6,12 @@ This app was made using React and Tailwind CSS and is powered by TMDB API.
 I have plans to add a LOT more features to this app in the future. Currently, it contains the following features:
 
 ## 🚀 Features
-- ✅ Search for movies using custom filters
-- ✅ Select from multiple genres, languages, runtime, and eras
-- ✅ "I'm Feeling Lucky" feature for quick recommendations
-- ✅ Modern UI with a clean, responsive design
-- ✅ Powered by TMDB API for accurate and up-to-date movie data
-- ✅ Built to be scalable, allowing new features and options to be added easily
+- Search for movies using custom filters
+- Select from multiple genres, languages, runtime, and eras
+- "I'm Feeling Lucky" feature for quick recommendations
+- Modern UI with a clean, responsive design
+- Powered by TMDB API for accurate and up-to-date movie data
+- Built to be scalable, allowing new features and options to be added easily
 
 ## 📥 Installation & Setup
 

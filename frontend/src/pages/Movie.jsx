@@ -22,7 +22,7 @@ const Movie = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const { selectedOptions, previousPage } = location.state;
+  const { selectedOptions, previousPage, searchBarQuery } = location.state;
   const [movie, setMovie] = useState(null);
   const [trailerKey, setTrailerKey] = useState("");
   const [credits, setCredits] = useState(null);
@@ -125,7 +125,9 @@ const Movie = () => {
   };
 
   const returnToResults = () => {
-    navigate("/results", { state: { selectedOptions, previousPage } });
+    navigate("/results", {
+      state: { selectedOptions, previousPage, searchBarQuery },
+    });
   };
 
   useEffect(() => {

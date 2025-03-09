@@ -31,7 +31,7 @@ const Results = () => {
     if (searchBarQuery) {
       return `${API_BASE_URL}/search/movie?query=${encodeURIComponent(
         searchBarQuery
-      )}`;
+      )}&page=${currentPage}`;
     }
 
     let genreIds = "";
@@ -120,7 +120,7 @@ const Results = () => {
 
   const loadMoviePage = (movie) => {
     navigate(`/movie/${movie.id}`, {
-      state: { selectedOptions, previousPage: currentPage },
+      state: { selectedOptions, previousPage: currentPage, searchBarQuery },
     });
   };
 

@@ -38,7 +38,7 @@ export const questionList = [
   },
   {
     id: "Languages",
-    question: "What languages should the movie be in?",
+    question: "What languages should the movies be in?",
     options: [
       { name: "English", value: "en" },
       { name: "Spanish", value: "es" },

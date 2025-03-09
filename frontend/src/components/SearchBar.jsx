@@ -31,7 +31,7 @@ const SearchBar = () => {
           } bg-gradient-to-r from-cyan-400 to-indigo-600 hover:from-cyan-600 hover:to-indigo-600  text-white py-2 px-4 rounded-full transition duration-300`}
         >
           <img
-            src="/magnifying-glass.png"
+            src="magnifying-glass.png"
             className="w-5 h-5 md:w-6 md:h-6"
           ></img>
         </button>

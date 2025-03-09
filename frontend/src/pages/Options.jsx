@@ -102,7 +102,7 @@ const Options = () => {
         <Link to="/">
           <button>
             <img
-              src="/logo-img.png"
+              src="logo-img.png"
               alt="logo"
               className="w-full h-auto object-contain cursor-pointer"
             />

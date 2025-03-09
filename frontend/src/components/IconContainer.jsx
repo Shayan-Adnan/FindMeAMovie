@@ -5,7 +5,7 @@ const IconContainer = ({ index, provider }) => {
     <div key={index} className="relative group ">
       {/* Provider Icon */}
       <img
-        src={`${process.env.PUBLIC_URL}/providerLogos/${provider}.png`}
+        src={`providerLogos/${provider}.png`}
         alt={`${provider}`}
         className="w-20 h-20 object-contain rounded-3xl shadow-md bg-gradient-to-r from-indigo-300 to-cyan-400 p-2 
      hover:scale-110 transition-transform"

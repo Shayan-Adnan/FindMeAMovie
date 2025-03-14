@@ -175,7 +175,7 @@ const Movie = () => {
           ) : (
             <img
               className="w-full rounded-lg shadow-lg"
-              src="/trailer-not-found.PNG"
+              src="trailer-not-found.PNG"
               alt="Trailer not found"
             />
           )

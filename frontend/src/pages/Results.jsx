@@ -1,6 +1,6 @@
 import React from "react";
 import { useState, useEffect } from "react";
-
+import axios from "axios";
 import { useLocation, useNavigate } from "react-router-dom";
 import Card from "../components/Card";
 import Spinner from "../components/Spinner";
@@ -26,6 +26,22 @@ const Results = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [usersLikedMovies, setUsersLikedMovies] = useState([]);
+
+  const getUsersLikedMovies = async () => {
+    try {
+      const response = await axios.get("/movie/getLikedMovies", {
+        withCredentials: true,
+      });
+
+      const { success, likedMovies } = response.data;
+      if (success) {
+        setUsersLikedMovies(likedMovies);
+      }
+    } catch (error) {
+      console.log("Error getting users liked movies in Results page: ", error);
+    }
+  };
 
   const buildTMDBQuery = () => {
     if (searchBarQuery) {
@@ -130,6 +146,7 @@ const Results = () => {
 
   useEffect(() => {
     fetchMovies();
+    getUsersLikedMovies();
   }, [currentPage]);
 
   return (
@@ -157,6 +174,7 @@ const Results = () => {
             <Card
               key={movie.id}
               movie={movie}
+              usersLikedMovies={usersLikedMovies}
               onClick={() => {
                 loadMoviePage(movie);
               }}

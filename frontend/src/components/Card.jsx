@@ -3,6 +3,7 @@ import { FaHeart } from "react-icons/fa";
 import axios from "axios";
 
 const Card = ({
+  usersLikedMovies,
   onClick,
   movie: {
     title,
@@ -27,6 +28,7 @@ const Card = ({
   useEffect(() => {
     const likeOrUnlikeMovie = async () => {
       try {
+        //only run this code if the user has actually clicked. without this, the api would be called each time the component mounts
         if (!hasClicked) return;
         if (liked) {
           await axios.post(
@@ -50,24 +52,11 @@ const Card = ({
   }, [liked]);
 
   useEffect(() => {
-    try {
-      const checkIfMovieIsLiked = async () => {
-        const response = await axios.get(
-          `/movie/isMovieLiked/${id}`,
-          {},
-          { withCredentials: true }
-        );
-
-        if (response.data.liked) {
-          setLiked(true);
-        }
-      };
-
-      checkIfMovieIsLiked();
-    } catch (error) {
-      console.log("Error in Like Check Use Effect", error);
+    if (usersLikedMovies.includes(id.toString())) {
+      console.log("here");
+      setLiked(true);
     }
-  }, []);
+  }, [usersLikedMovies]);
 
   return (
     <div

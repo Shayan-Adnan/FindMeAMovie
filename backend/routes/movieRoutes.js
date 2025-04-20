@@ -10,4 +10,6 @@ router.delete("/unlikeMovie/:id", getUserId, movieController.unlikeMovie);
 
 router.get("/isMovieLiked/:id", getUserId, movieController.isMovieLiked);
 
+router.get("/getLikedMovies", getUserId, movieController.getLikedMovies);
+
 module.exports = router;

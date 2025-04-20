@@ -1,4 +1,6 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { FaHeart } from "react-icons/fa";
+import axios from "axios";
 
 const Card = ({
   onClick,
@@ -9,15 +11,70 @@ const Card = ({
     release_date,
     original_language,
     overview,
+    id,
     runtime,
   },
 }) => {
+  const [liked, setLiked] = useState(false);
+  const [hasClicked, setHasClicked] = useState(false);
+
+  const handleLike = async (e) => {
+    e.stopPropagation();
+    setLiked((prev) => !prev);
+    setHasClicked(true);
+  };
+
+  useEffect(() => {
+    const likeOrUnlikeMovie = async () => {
+      try {
+        if (!hasClicked) return;
+        if (liked) {
+          await axios.post(
+            `/movie/likeMovie/${id}`,
+            {},
+            { withCredentials: true }
+          );
+          console.log("Movie liked!");
+        } else {
+          await axios.delete(`http://localhost:3000/movie/unlikeMovie/${id}`, {
+            withCredentials: true,
+          });
+          console.log("Movie unliked!");
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    likeOrUnlikeMovie();
+  }, [liked]);
+
+  useEffect(() => {
+    try {
+      const checkIfMovieIsLiked = async () => {
+        const response = await axios.get(
+          `/movie/isMovieLiked/${id}`,
+          {},
+          { withCredentials: true }
+        );
+
+        if (response.data.liked) {
+          setLiked(true);
+        }
+      };
+
+      checkIfMovieIsLiked();
+    } catch (error) {
+      console.log("Error in Like Check Use Effect", error);
+    }
+  }, []);
+
   return (
     <div
       className="font-bebas-neue group relative bg-slate-950 rounded-xl cursor-pointer transform transition all duration-300 hover:scale-105 hover:shadow-2x1 max-w-3xs p-4"
       onClick={onClick}
     >
-      <div>
+      <div className="relative">
         <div className="flex justify-center">
           <img
             src={
@@ -29,6 +86,14 @@ const Card = ({
             className="w-full h-66 object-cover rounded-xs"
           ></img>
         </div>
+
+        <button
+          className="absolute bottom-1 right-1 z-20 text-white hover:text-red-400 transition-colors duration-300"
+          onClick={handleLike}
+        >
+          <FaHeart className={liked ? "text-red-700" : "text-slate-300"} />
+        </button>
+
         <div className="mt-4 text-center">
           <h2 className="text-lg  text-white">{title}</h2>
 
@@ -45,10 +110,10 @@ const Card = ({
             <p className="text-gray-400">{release_date}</p>
 
             {/* currently this API doesnt return a runtime for the movies, keeping this here anyway for if its added in the future  */}
-            <p className="text-gray-400">{runtime}</p>
+            {/* <p className="text-gray-400">{runtime}</p> */}
           </div>
 
-          <p className="text-gray-300 text-sm mt-3 absolute bottom-0 left-0 w-full bg-black bg-opacity-80 p-4 rounded-b-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+          <p className="text-gray-300 text-sm mt-3 absolute bottom-0 left-0 w-full bg-black bg-opacity-80 p-4 rounded-b-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10">
             {overview}
           </p>
         </div>

@@ -46,6 +46,8 @@ const Options = () => {
       setCurrentSelections(
         selectedOptions[questionList[currentQuestionIndex - 1]?.id] || []
       );
+    } else {
+      navigate("/");
     }
   };
 

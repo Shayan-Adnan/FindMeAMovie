@@ -1,46 +1,103 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Menu, X } from "lucide-react";
+import { useUser } from "../context/UserContext";
+import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const { user, logout } = useUser();
+  const navigate = useNavigate();
 
-  //need to load this from env later
-  const SERVER_URL = `http://localhost:3000`;
-
-  const login = () => {
-    window.location.href = `${SERVER_URL}/auth/login/google`;
+  const handleLogout = async () => {
+    await logout();
+    navigate("/");
   };
 
   return (
-    <nav className="w-full py-4 font-bebas-neue bg-gradient-to-r from-slate-800 to-slate-700 shadow-md">
-      <div className="flex items-center justify-between text-white text-xl px-5">
-        <h1 className="text-3xl">FindMeAMovie</h1>
-        <div className="hidden md:flex space-x-6">
-          <button className="hover:text-cyan-400 transition" onClick={login}>
-            Login
-          </button>
-          <Link>Profile Name</Link>
+    <nav className="w-full font-bebas-neue bg-gradient-to-r from-slate-900 to-slate-800 shadow-md">
+      <div className="flex items-center justify-between px-6 text-white text-xl">
+        {/* Logo */}
+        <Link to="/">
+          <div className="flex items-center w-36 md:w-40 h-20 md:h-22">
+            <img
+              src="logo-img.png"
+              alt="Logo"
+              className="object-contain w-full h-full"
+            />
+          </div>
+        </Link>
+
+        {/* Desktop Nav */}
+        <div className="hidden md:flex items-center space-x-8">
+          {!user ? (
+            <Link to="/login">
+              <button className="hover:text-cyan-400 transition duration-300">
+                Login
+              </button>
+            </Link>
+          ) : (
+            <>
+              <Link to="/">
+                <div className="flex items-center space-x-3 hover:text-cyan-400 transition duration-300">
+                  <img
+                    src={user.avatar}
+                    alt="User Avatar"
+                    className="rounded-full w-10 h-10 object-cover border-2 border-cyan-400"
+                  />
+                  <span>{user.name}</span>
+                </div>
+              </Link>
+              <button
+                onClick={handleLogout}
+                className="hover:text-cyan-400 transition duration-300"
+              >
+                Logout
+              </button>
+            </>
+          )}
         </div>
 
-        <button onClick={() => setIsOpen(!isOpen)} className="md:hidden">
+        {/* Mobile Nav Toggle */}
+        <button
+          onClick={() => setIsOpen(!isOpen)}
+          className="md:hidden focus:outline-none transition-transform duration-300"
+        >
           {isOpen ? <X size={28} /> : <Menu size={28} />}
         </button>
       </div>
 
+      {/* Mobile Menu */}
       {isOpen && (
-        <div
-          className={`md:hidden absolute top-16 left-0 w-full bg-slate-900/90 backdrop-blur-md text-white flex flex-col items-center space-y-4 py-6 transition-all duration-300 ease-in-out`}
-        >
-          <Link
-            to="/options"
-            onClick={() => setIsOpen(false)}
-            className="hover:text-cyan-400 transition"
-          >
-            Login
-          </Link>
-          <Link>Logout</Link>
-          <Link>Profile Name</Link>
+        <div className="md:hidden absolute top-[80px] left-0 w-full bg-slate-900/90 backdrop-blur-md text-white flex flex-col items-center space-y-6 py-6 transition-all duration-300 ease-in-out z-50">
+          {!user ? (
+            <Link
+              to="/login"
+              onClick={() => setIsOpen(false)}
+              className="hover:text-cyan-400 transition duration-300"
+            >
+              Login
+            </Link>
+          ) : (
+            <>
+              <Link
+                to="/"
+                onClick={() => setIsOpen(false)}
+                className="hover:text-cyan-400 transition duration-300"
+              >
+                {user.name}
+              </Link>
+              <button
+                onClick={() => {
+                  logout();
+                  setIsOpen(false);
+                }}
+                className="hover:text-cyan-400 transition duration-300"
+              >
+                Logout
+              </button>
+            </>
+          )}
         </div>
       )}
     </nav>

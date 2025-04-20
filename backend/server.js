@@ -4,6 +4,7 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const connectDatabase = require("./config/db");
 const authRoutes = require("./routes/authRoutes");
+const movieRoutes = require("./routes/movieRoutes");
 const { PORT, BASE_URL, CLIENT_URL } = require("./config/config");
 
 const app = express();
@@ -11,13 +12,14 @@ const app = express();
 app.use(express.json());
 app.use(
   cors({
-    origin: BASE_URL,
+    origin: CLIENT_URL,
     credentials: true,
   })
 );
 app.use(cookieParser());
 app.use(passport.initialize());
 app.use("/auth", authRoutes);
+app.use("/movie", movieRoutes);
 
 connectDatabase();
 

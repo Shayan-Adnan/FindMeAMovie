@@ -20,4 +20,23 @@ const verifyJwt = (req, res, next) => {
   }
 };
 
-module.exports = verifyJwt;
+const getUserId = (req, res, next) => {
+  try {
+    const token = req.cookies.findMeAMovieToken;
+
+    if (!token) {
+      return res
+        .status(401)
+        .json({ message: "Unauthorized! No token present in cookies." });
+    }
+
+    const decoded = jwt.verify(token, JWT_SECRET);
+    req.userId = decoded.userId;
+    next();
+  } catch (error) {
+    console.log("An error occurred during JWT verification: ", error);
+    return res.status(403).json({ message: "Forbidden" });
+  }
+};
+
+module.exports = { verifyJwt, getUserId };

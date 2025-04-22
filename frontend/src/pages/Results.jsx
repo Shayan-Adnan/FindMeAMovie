@@ -136,7 +136,12 @@ const Results = () => {
 
   const loadMoviePage = (movie) => {
     navigate(`/movie/${movie.id}`, {
-      state: { selectedOptions, previousPage: currentPage, searchBarQuery },
+      state: {
+        from: "results",
+        selectedOptions,
+        previousPage: currentPage,
+        searchBarQuery,
+      },
     });
   };
 

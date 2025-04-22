@@ -38,7 +38,7 @@ const Navbar = () => {
             </Link>
           ) : (
             <>
-              <Link to="/">
+              <Link to={`/profile/${user.userId}`}>
                 <div className="flex items-center space-x-3 hover:text-cyan-400 transition duration-300">
                   <img
                     src={user.avatar}

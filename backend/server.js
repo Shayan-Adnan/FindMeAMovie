@@ -5,6 +5,7 @@ const cookieParser = require("cookie-parser");
 const connectDatabase = require("./config/db");
 const authRoutes = require("./routes/authRoutes");
 const movieRoutes = require("./routes/movieRoutes");
+const userRoutes = require("./routes/userRoutes");
 const { PORT, BASE_URL, CLIENT_URL } = require("./config/config");
 
 const app = express();
@@ -20,6 +21,7 @@ app.use(cookieParser());
 app.use(passport.initialize());
 app.use("/auth", authRoutes);
 app.use("/movie", movieRoutes);
+app.use("/user", userRoutes);
 
 connectDatabase();
 

@@ -1,11 +1,13 @@
 const User = require("../models/user");
+const { TMDB_API_KEY } = require("../config/config");
+const TMDB_API_BASE_URL = "https://api.themoviedb.org/3";
 
 const likeMovie = async (req, res) => {
   try {
     const movieId = req.params.id;
     await User.findOneAndUpdate(
       { userId: req.userId },
-      { $addToSet: { likedMovies: movieId } },
+      { $addToSet: { likedMovies: movieId }, $inc: { numberOfLikedMovies: 1 } },
       { new: true }
     );
     res.status(200).json({ message: "Added movie to user's Liked Movies" });
@@ -20,7 +22,7 @@ const unlikeMovie = async (req, res) => {
     const movieId = req.params.id;
     await User.findOneAndUpdate(
       { userId: req.userId },
-      { $pull: { likedMovies: movieId } }
+      { $pull: { likedMovies: movieId }, $inc: { numberOfLikedMovies: -1 } }
     );
     res.status(200).json({ message: "Removed movie from user's Liked Movies" });
   } catch (error) {
@@ -61,4 +63,43 @@ const getLikedMovies = async (req, res) => {
   }
 };
 
-module.exports = { likeMovie, unlikeMovie, isMovieLiked, getLikedMovies };
+const getMovies = async (req, res) => {
+  try {
+    const API_OPTIONS = {
+      method: "GET",
+      headers: {
+        accept: "application/json",
+        Authorization: `Bearer ${TMDB_API_KEY}`,
+      },
+    };
+    const { likedMovies } = req.body;
+
+    const likedMoviesData = await Promise.all(
+      likedMovies.map(async (id) => {
+        const endpoint = `${TMDB_API_BASE_URL}/movie/${id}`;
+        const response = await fetch(endpoint, API_OPTIONS);
+
+        if (!response.ok) {
+          console.log("Error getting movies: ", error);
+          throw new Error("Error getting movie.");
+        }
+
+        const data = await response.json();
+        return data;
+      })
+    );
+
+    res.status(200).json({ success: true, likedMoviesData });
+  } catch (error) {
+    console.log("Error getting movies: ", error);
+    res.status(500).json({ success: false, message: "Error getting movies." });
+  }
+};
+
+module.exports = {
+  likeMovie,
+  unlikeMovie,
+  isMovieLiked,
+  getLikedMovies,
+  getMovies,
+};

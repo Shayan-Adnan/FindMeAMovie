@@ -3,6 +3,7 @@ const { MONGODB_URI } = require("./config");
 
 const connectDatabase = async () => {
   try {
+    console.log("Establishing database connection...");
     await mongoose.connect(MONGODB_URI, {
       serverSelectionTimeoutMS: 120000,
     });

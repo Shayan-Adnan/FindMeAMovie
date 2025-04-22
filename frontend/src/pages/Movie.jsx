@@ -22,7 +22,11 @@ const Movie = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const { selectedOptions, previousPage, searchBarQuery } = location.state;
+  const selectedOptions = location.state?.selectedOptions || null;
+  const previousPage = location.state?.previousPage || 1;
+  const searchBarQuery = location.state?.searchBarQuery || "";
+  const userId = location.state?.userId || "";
+
   const [movie, setMovie] = useState(null);
   const [trailerKey, setTrailerKey] = useState("");
   const [credits, setCredits] = useState(null);
@@ -124,10 +128,16 @@ const Movie = () => {
     }
   };
 
-  const returnToResults = () => {
-    navigate("/results", {
-      state: { selectedOptions, previousPage, searchBarQuery },
-    });
+  const returnToPreviousPage = () => {
+    if (location.state?.from === "results") {
+      navigate("/results", {
+        state: { selectedOptions, previousPage, searchBarQuery },
+      });
+    } else if (location.state?.from === "profile") {
+      navigate(`/profile/${userId}`);
+    } else {
+      navigate("/");
+    }
   };
 
   useEffect(() => {
@@ -152,7 +162,7 @@ const Movie = () => {
       {/* Back Button */}
       <div className="relative w-full max-w-5xl">
         <button
-          onClick={returnToResults}
+          onClick={returnToPreviousPage}
           className="cursor-pointer absolute top-0 left-0 flex items-center gap-2"
         >
           <img src={leftArrow} className="w-6 h-auto" alt="Back" />

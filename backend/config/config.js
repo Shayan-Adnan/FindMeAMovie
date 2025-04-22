@@ -8,4 +8,5 @@ module.exports = {
   GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
   JWT_SECRET: process.env.JWT_SECRET,
   MONGODB_URI: process.env.MONGODB_URI,
+  TMDB_API_KEY: process.env.TMDB_API_KEY,
 };

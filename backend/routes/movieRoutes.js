@@ -12,4 +12,6 @@ router.get("/isMovieLiked/:id", getUserId, movieController.isMovieLiked);
 
 router.get("/getLikedMovies", getUserId, movieController.getLikedMovies);
 
+router.post("/getMovies", movieController.getMovies);
+
 module.exports = router;

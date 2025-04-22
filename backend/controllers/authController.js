@@ -45,11 +45,10 @@ const logout = async (req, res) => {
 const getUser = async (req, res) => {
   try {
     const user = await User.findOne({ userId: req.user.userId });
-    res.json({
-      id: user.userId,
-      name: user.name,
-      avatar: user.avatar,
-    });
+    const { userId, name, avatar, numberOfLikedMovies, likedMovies, lists } =
+      user;
+
+    res.json({ userId, name, avatar, numberOfLikedMovies, likedMovies, lists });
   } catch (error) {
     console.log(error);
     res.status(401).json({ message: "Unauthorized" });

@@ -5,7 +5,9 @@ const UserSchema = mongoose.Schema({
   email: String,
   name: String,
   avatar: String,
+  numberOfLikedMovies: { type: Number, default: 0 },
   likedMovies: [String],
+  numberOfLists: { type: Number, default: 0 },
   lists: [
     {
       title: String,

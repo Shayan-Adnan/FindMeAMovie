@@ -5,6 +5,9 @@ import Results from "./pages/Results";
 import Movie from "./pages/Movie";
 import Navbar from "./components/Navbar";
 import Login from "./pages/Login";
+import Profile from "./pages/Profile";
+import Footer from "./components/Footer";
+import CreateList from "./pages/CreateList";
 
 function App() {
   return (
@@ -12,12 +15,15 @@ function App() {
       <HashRouter>
         <Navbar />
         <Routes>
+          <Route path="/profile/:id" element={<Profile />} />
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/options" element={<Options />} />
           <Route path="/results" element={<Results />} />
           <Route path="/movie/:id" element={<Movie />} />
+          <Route path="/createList" element={<CreateList />} />
         </Routes>
+        <Footer />
       </HashRouter>
     </>
   );

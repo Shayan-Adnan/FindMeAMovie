@@ -8,6 +8,7 @@ import Login from "./pages/Login";
 import Profile from "./pages/Profile";
 import Footer from "./components/Footer";
 import CreateList from "./pages/CreateList";
+import RequireAuth from "./components/auth/RequireAuth";
 
 function App() {
   return (
@@ -21,7 +22,15 @@ function App() {
           <Route path="/options" element={<Options />} />
           <Route path="/results" element={<Results />} />
           <Route path="/movie/:id" element={<Movie />} />
-          <Route path="/createList" element={<CreateList />} />
+
+          <Route
+            path="/createList"
+            element={
+              <RequireAuth>
+                <CreateList />
+              </RequireAuth>
+            }
+          />
         </Routes>
         <Footer />
       </HashRouter>

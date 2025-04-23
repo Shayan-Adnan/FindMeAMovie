@@ -1,98 +1,12 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-const lists = [
-  {
-    title: "Liked Movies",
-    description: "Hello This is James Bond",
-    thumbnails: [
-      "/ace.jpg",
-      "/kraven.jpg",
-      "/amateur.jpg",
-      "/bee.jpg",
-      "/blackbag.jpg",
-    ],
-  },
-  {
-    title: "Recent Activity",
-    description: "Hello This is Mike Wilson",
+const ListsPreview = ({ lists = [] }) => {
+  const navigate = useNavigate();
+  const loadFullList = (id) => {
+    console.log(id);
+  };
 
-    thumbnails: [
-      "/kraven.jpg",
-      "/balled.jpg",
-      "/atlanta.jpg",
-      "/kungfupanda.jpg",
-      "/strozek.jpg",
-    ],
-  },
-  {
-    title: "Bla bla bla bla bla",
-    description: "Hello This is Shamim Bhai",
-    thumbnails: [
-      "/balled.jpg",
-      "/blowuptown.jpg",
-      "/kungfupanda.jpg",
-      "/strozek.jpg",
-      "/atlanta.jpg",
-    ],
-  },
-  {
-    title: "Bla bla bla bla bla",
-    description: "Hello This is Shamim Bhai",
-    thumbnails: [
-      "/balled.jpg",
-      "/blowuptown.jpg",
-      "/kungfupanda.jpg",
-      "/strozek.jpg",
-      "/atlanta.jpg",
-    ],
-  },
-  {
-    title: "Bla bla bla bla bla",
-    description: "Hello This is Shamim Bhai",
-    thumbnails: [
-      "/balled.jpg",
-      "/blowuptown.jpg",
-      "/kungfupanda.jpg",
-      "/strozek.jpg",
-      "/atlanta.jpg",
-    ],
-  },
-  {
-    title: "Bla bla bla bla bla",
-    description: "Hello This is Shamim Bhai",
-    thumbnails: [
-      "/balled.jpg",
-      "/blowuptown.jpg",
-      "/kungfupanda.jpg",
-      "/strozek.jpg",
-      "/atlanta.jpg",
-    ],
-  },
-  {
-    title: "Bla bla bla bla bla",
-    description: "Hello This is Shamim Bhai",
-    thumbnails: [
-      "/balled.jpg",
-      "/blowuptown.jpg",
-      "/kungfupanda.jpg",
-      "/strozek.jpg",
-      "/atlanta.jpg",
-    ],
-  },
-  {
-    title: "Bla bla bla bla bla",
-    description: "Hello This is Shamim Bhai",
-    thumbnails: [
-      "/balled.jpg",
-      "/blowuptown.jpg",
-      "/kungfupanda.jpg",
-      "/strozek.jpg",
-      "/atlanta.jpg",
-    ],
-  },
-];
-
-const ListsPreview = () => {
   return (
     <div className="mt-10">
       <h2 className="text-xl md:text-2xl mb-4">Lists</h2>
@@ -102,12 +16,13 @@ const ListsPreview = () => {
           <div className="flex flex-col sm:flex-row gap-4">
             {/* Thumbnails */}
             <div className="flex gap-1">
-              {list.thumbnails.map((thumb, index) => (
+              {list.movies.slice(0, 4).map((movie, index) => (
                 <img
                   key={index}
-                  src={thumb}
-                  alt=""
+                  src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`}
+                  alt="poster"
                   className="w-20 h-[110px] object-cover rounded-sm border border-zinc-700 cursor-pointer"
+                  onClick={() => loadFullList(list._id)}
                 />
               ))}
             </div>
@@ -115,7 +30,9 @@ const ListsPreview = () => {
             {/* Section Of Info*/}
             <div className="flex flex-col justify-center">
               <h3 className=" text-white text-base sm:text-lg md:text-xl hover:text-green-500 transition duration-300 cursor-pointer">
-                {list.title}
+                <button onClick={() => loadFullList(list._id)}>
+                  {list.title}
+                </button>
               </h3>
 
               {list.description && (

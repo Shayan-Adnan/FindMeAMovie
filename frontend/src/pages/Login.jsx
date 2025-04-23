@@ -1,11 +1,23 @@
+import { useEffect } from "react";
 import { FaGoogle, FaFacebook, FaGithub } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+import { useUser } from "../context/UserContext";
 const SERVER_URL = import.meta.env.VITE_SERVER_URL;
 
-const login = (provider) => {
-  window.location.href = `${SERVER_URL}/auth/login/${provider}`;
-};
-
 const Login = () => {
+  const { user } = useUser();
+  const navigate = useNavigate();
+
+  const login = (provider) => {
+    window.location.href = `${SERVER_URL}/auth/login/${provider}`;
+  };
+
+  useEffect(() => {
+    if (user) {
+      navigate("/");
+    }
+  }, [user]);
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#0e0e1c] font-bebas-neue">
       <div className="bg-[#1a1a2e] text-white p-8 rounded-2xl shadow-lg w-full max-w-sm">

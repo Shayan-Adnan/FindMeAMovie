@@ -1,6 +1,13 @@
 const User = require("../models/user");
 const { TMDB_API_KEY } = require("../config/config");
 const TMDB_API_BASE_URL = "https://api.themoviedb.org/3";
+const API_OPTIONS = {
+  method: "GET",
+  headers: {
+    accept: "application/json",
+    Authorization: `Bearer ${TMDB_API_KEY}`,
+  },
+};
 
 const likeMovie = async (req, res) => {
   try {
@@ -65,13 +72,6 @@ const getLikedMovies = async (req, res) => {
 
 const getMovies = async (req, res) => {
   try {
-    const API_OPTIONS = {
-      method: "GET",
-      headers: {
-        accept: "application/json",
-        Authorization: `Bearer ${TMDB_API_KEY}`,
-      },
-    };
     const { likedMovies } = req.body;
 
     const likedMoviesData = await Promise.all(
@@ -96,10 +96,32 @@ const getMovies = async (req, res) => {
   }
 };
 
+const searchMovies = async (req, res) => {
+  try {
+    const { debouncedQuery } = req.query;
+    const response = await fetch(
+      `https://api.themoviedb.org/3/search/movie?query=${debouncedQuery}`,
+      API_OPTIONS
+    );
+
+    if (!response.ok) {
+      console.log("Error searching for movies: ", error);
+      throw new Error("Error searching for movie.");
+    }
+
+    const movies = await response.json();
+    res.status(200).json({ success: true, movies });
+  } catch (error) {
+    res.status(500).json({ success: false });
+    console.log("Error searching for movies ", error);
+  }
+};
+
 module.exports = {
   likeMovie,
   unlikeMovie,
   isMovieLiked,
   getLikedMovies,
   getMovies,
+  searchMovies,
 };

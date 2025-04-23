@@ -12,7 +12,7 @@ const UserSchema = mongoose.Schema({
     {
       title: String,
       description: String,
-      movies: [String],
+      movies: [{ id: String, title: String, poster_path: String }],
       createdAt: { type: Date, default: Date.now },
     },
   ],

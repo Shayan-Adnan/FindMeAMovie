@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 import { useUser } from "../context/UserContext";
 import { useNavigate } from "react-router-dom";
+import { IoMdLogOut } from "react-icons/io";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -48,11 +49,16 @@ const Navbar = () => {
                   <span>{user.name}</span>
                 </div>
               </Link>
+              <Link to={"/createList"}>
+                <button className="hover:text-cyan-400 transition duration-300 cursor-pointer">
+                  Create List
+                </button>
+              </Link>
               <button
                 onClick={handleLogout}
-                className="hover:text-cyan-400 transition duration-300"
+                className="hover:text-cyan-400 transition duration-300 cursor-pointer"
               >
-                Logout
+                <IoMdLogOut />
               </button>
             </>
           )}
@@ -86,6 +92,11 @@ const Navbar = () => {
                 className="hover:text-cyan-400 transition duration-300"
               >
                 {user.name}
+              </Link>
+              <Link to={"/createList"}>
+                <button className="hover:text-cyan-400 transition duration-300 cursor-pointer">
+                  Create List
+                </button>
               </Link>
               <button
                 onClick={() => {

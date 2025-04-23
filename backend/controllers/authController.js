@@ -4,6 +4,7 @@ const { JWT_SECRET, CLIENT_URL } = require("../config/config");
 
 const login = async (req, res) => {
   try {
+    //the passport.js redirect function is giving us these values
     const { id: userId, email, name, avatar } = req.user;
 
     const existingUser = await User.findOne({

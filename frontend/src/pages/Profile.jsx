@@ -10,6 +10,7 @@ import axios from "axios";
 const Profile = () => {
   const [user, setUser] = useState();
   const [likedMovies, setLikedMovies] = useState([]);
+  const [lists, setLists] = useState([]);
   const [likedMoviesData, setLikedMoviesData] = useState([]);
   const userId = window.location.hash.split("/")[2];
 
@@ -33,6 +34,7 @@ const Profile = () => {
   useEffect(() => {
     if (user) {
       setLikedMovies(user.likedMovies);
+      setLists(user.lists);
     }
   }, [user]);
 
@@ -72,7 +74,7 @@ const Profile = () => {
           ) : (
             <Spinner />
           )}
-          <ListsPreview />
+          <ListsPreview lists={lists} />
         </div>
       </div>
     </div>

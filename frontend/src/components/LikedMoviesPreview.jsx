@@ -32,7 +32,7 @@ const LikedMoviesPreview = ({ likedMovies = [], userId }) => {
                         : `./no-movie.png`
                     }
                     alt={movie.title}
-                    className="w-36 h-56 object-cover rounded border-2 border-transparent hover:border-green-500 transition duration-300 cursor-pointer"
+                    className="w-36 h-56 object-cover rounded border-2 border-transparent hover:border-blue-500 cursor-pointer"
                   />
                 </button>
               </div>

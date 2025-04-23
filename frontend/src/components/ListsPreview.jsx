@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-const ListsPreview = ({ lists = [] }) => {
+const ListsPreview = ({ lists = [], userId }) => {
   const navigate = useNavigate();
-  const loadFullList = (id) => {
-    console.log(id);
+
+  const loadFullList = (listId) => {
+    navigate(`/list/${userId}/${listId}`);
   };
 
   return (
@@ -28,7 +29,7 @@ const ListsPreview = ({ lists = [] }) => {
             </div>
 
             {/* Section Of Info*/}
-            <div className="flex flex-col justify-center">
+            <div className="flex flex-col justify-center ">
               <h3 className=" text-white text-base sm:text-lg md:text-xl hover:text-green-500 transition duration-300 cursor-pointer">
                 <button onClick={() => loadFullList(list._id)}>
                   {list.title}
@@ -36,7 +37,7 @@ const ListsPreview = ({ lists = [] }) => {
               </h3>
 
               {list.description && (
-                <p className="text-sm sm:text-base text-zinc-400 mt-1 whitespace-pre-line">
+                <p className="w-xl text-sm sm:text-base text-zinc-400 mt-1 whitespace-pre-line overflow-hidden ">
                   {list.description}
                 </p>
               )}

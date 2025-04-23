@@ -9,6 +9,8 @@ import Profile from "./pages/Profile";
 import Footer from "./components/Footer";
 import CreateList from "./pages/CreateList";
 import RequireAuth from "./components/auth/RequireAuth";
+import List from "./pages/List";
+import LikedMovies from "./pages/LikedMovies";
 
 function App() {
   return (
@@ -22,6 +24,8 @@ function App() {
           <Route path="/options" element={<Options />} />
           <Route path="/results" element={<Results />} />
           <Route path="/movie/:id" element={<Movie />} />
+          <Route path="/list/:userId/:listId" element={<List />} />
+          <Route path="/likedMovies/:userId" element={<LikedMovies />} />
 
           <Route
             path="/createList"

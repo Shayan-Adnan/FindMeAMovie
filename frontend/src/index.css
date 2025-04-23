@@ -3,6 +3,8 @@
 @import "tailwindcss";
 @tailwind utilities;
 
+@plugin "@tailwindcss/line-clamp";
+
 @theme {
   --font-dm-sans: DM Sans, sans-serif;
   --font-bebas-neue: Bebas Neue, sans-serif;

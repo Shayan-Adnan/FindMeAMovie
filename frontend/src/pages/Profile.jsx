@@ -1,9 +1,8 @@
 import ProfileHeader from "../components/ProfileHeader";
 import ListsPreview from "../components/ListsPreview";
 import LikedMoviesPreview from "../components/LikedMoviesPreview";
-import Footer from "../components/Footer";
-import { useUser } from "../context/UserContext";
 import { useEffect, useState } from "react";
+
 import Spinner from "../components/Spinner";
 import axios from "axios";
 
@@ -74,7 +73,7 @@ const Profile = () => {
           ) : (
             <Spinner />
           )}
-          <ListsPreview lists={lists} />
+          <ListsPreview lists={lists} userId={userId} />
         </div>
       </div>
     </div>

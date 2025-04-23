@@ -27,7 +27,7 @@ const CreateList = () => {
       //   return;
       // }
 
-      await axios.post("/user/createList", {
+      await axios.post("/list/createList", {
         title,
         description,
         selectedMovies,

@@ -9,20 +9,26 @@ const LikedMoviesPreview = ({ likedMovies = [], userId }) => {
     navigate(`/movie/${id}`, { state: { from: "profile", userId } });
   };
 
+  const loadLikedMoviesPage = () => {
+    navigate(`/likedMovies/${userId}`);
+  };
   return (
     <>
       {likedMovies.length > 0 ? (
         <div className="mb-6">
           <div className="flex justify-between">
             <h2 className="text-xl mb-1">Liked Movies</h2>
-            <a href="#" className="text-sm hover:text-blue-500">
+            <a
+              onClick={() => loadLikedMoviesPage(userId)}
+              className="text-sm hover:text-blue-500 cursor-pointer"
+            >
               All
             </a>
           </div>
           <div className="border-b border-zinc-500 mb-4"></div>
 
           <div className=" gap-2 flex-wrap grid grid-cols-3 sm:grid-cols-6 md:grid-cols-6">
-            {likedMovies.map((movie, i) => (
+            {likedMovies.slice(0, 6).map((movie, i) => (
               <div key={i}>
                 <button onClick={() => loadMoviePage(movie.id)}>
                   <img

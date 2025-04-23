@@ -70,6 +70,21 @@ const getLikedMovies = async (req, res) => {
   }
 };
 
+const getLikedMoviesFromId = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const user = await User.findOne({ userId });
+    const { likedMovies } = user;
+
+    res.status(200).json({ success: true, likedMovies });
+  } catch (error) {
+    console.error("Error getting liked movies", error);
+    res
+      .status(500)
+      .json({ success: false, message: "Error getting liked movies" });
+  }
+};
+
 const getMovies = async (req, res) => {
   try {
     const { likedMovies } = req.body;
@@ -124,4 +139,5 @@ module.exports = {
   getLikedMovies,
   getMovies,
   searchMovies,
+  getLikedMoviesFromId,
 };

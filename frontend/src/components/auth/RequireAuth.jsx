@@ -3,14 +3,14 @@ import { useNavigate } from "react-router-dom";
 import { useUser } from "../../context/UserContext";
 
 const RequireAuth = ({ children }) => {
-  const { user } = useUser();
+  const { user, loading } = useUser();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!user) {
+    if (!loading && !user) {
       navigate("/login");
     }
-  }, [user, navigate]);
+  }, [user, loading, navigate]);
 
   return user ? children : null;
 };

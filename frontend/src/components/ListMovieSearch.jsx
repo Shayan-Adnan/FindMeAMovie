@@ -33,7 +33,6 @@ const ListMovieSearch = ({ onSelect }) => {
           const isNotRomance = !movie.genre_ids?.includes(10749);
           const isInDesiredRegion = movie.original_language === "en";
 
-          console.log(isNotAdult, isNotRomance, isInDesiredRegion);
           return isNotAdult && isNotRomance && isInDesiredRegion;
         });
 

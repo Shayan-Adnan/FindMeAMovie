@@ -20,6 +20,31 @@ router.get(
   authController.login
 );
 
+router.get("/login/facebook", passport.authenticate("facebook"));
+
+router.get(
+  "/oauth2/redirect/facebook",
+  passport.authenticate("facebook", {
+    session: false,
+    failureRedirect: CLIENT_URL,
+  }),
+  authController.login
+);
+
+router.get(
+  "/login/github",
+  passport.authenticate("github", { scope: ["user:email"] })
+);
+
+router.get(
+  "/oauth2/redirect/github",
+  passport.authenticate("github", {
+    session: false,
+    failureRedirect: CLIENT_URL,
+  }),
+  authController.login
+);
+
 router.get("/getUser", verifyJwt, authController.getUser);
 
 router.get("/logout", authController.logout);

@@ -11,6 +11,7 @@ import CreateList from "./pages/CreateList";
 import RequireAuth from "./components/auth/RequireAuth";
 import List from "./pages/List";
 import LikedMovies from "./pages/LikedMovies";
+import { Navigate } from "react-router-dom";
 
 function App() {
   return (
@@ -35,6 +36,7 @@ function App() {
               </RequireAuth>
             }
           />
+          <Route path="*" element={<Navigate to="/" />} />
         </Routes>
         <Footer />
       </HashRouter>

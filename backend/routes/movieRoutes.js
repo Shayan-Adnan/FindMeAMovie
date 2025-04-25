@@ -20,4 +20,16 @@ router.post("/getMovies", movieController.getMovies);
 
 router.get("/searchMovies", movieController.searchMovies);
 
+router.get("/getMovieDetails/:id", movieController.getMovieDetails);
+
+router.get("/getTrailer/:id", movieController.getTrailer);
+
+router.get("/getCredits/:id", movieController.getCredits);
+
+router.get("/getProviders/:id", movieController.getProviders);
+
+router.post("/discoverMovies", movieController.discoverMovies);
+
+router.get("/getRandomMovie", movieController.getRandomMovie);
+
 module.exports = router;

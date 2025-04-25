@@ -1,7 +1,18 @@
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import SearchBar from "../components/SearchBar";
+import axios from "axios";
 
 const Home = () => {
+  const navigate = useNavigate();
+
+  const loadRandomMovie = async () => {
+    const response = await axios.get(`/movie/getRandomMovie`);
+    const id = response.data.movie.id;
+
+    navigate(`/movie/${id}`);
+  };
+
   return (
     <>
       <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-r from-slate-950 to-slate-900 text-white px-6 py-12 font-bebas-neue space-y-12">
@@ -16,7 +27,10 @@ const Home = () => {
           </button>
         </Link>
 
-        <button className="mt-6 text-lg md:text-xl text-white bg-gray-800 px-6 py-3 rounded-full hover:bg-gray-700 transition shadow-md">
+        <button
+          className="mt-6 text-lg md:text-xl text-white bg-gray-800 px-6 py-3 rounded-full hover:bg-gray-700 transition shadow-md"
+          onClick={loadRandomMovie}
+        >
           I'm Feeling Lucky
         </button>
       </div>

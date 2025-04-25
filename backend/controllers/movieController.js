@@ -8,6 +8,8 @@ const API_OPTIONS = {
     Authorization: `Bearer ${TMDB_API_KEY}`,
   },
 };
+const axios = require("axios");
+const { fetchRandomMovie } = require("../services/movieService");
 
 const likeMovie = async (req, res) => {
   try {
@@ -132,6 +134,151 @@ const searchMovies = async (req, res) => {
   }
 };
 
+const getMovieDetails = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const response = await axios.get(
+      `${TMDB_API_BASE_URL}/movie/${id}`,
+      API_OPTIONS
+    );
+    res.status(200).json(response.data);
+  } catch (error) {
+    console.log(error);
+
+    res.status(500).json({ error: "Failed to fetch movie details" });
+  }
+};
+
+const getTrailer = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const response = await axios.get(
+      `${TMDB_API_BASE_URL}/movie/${id}/videos?language=en-US`,
+      API_OPTIONS
+    );
+    const trailer = response.data.results.find(
+      (video) => video.type === "Trailer"
+    );
+    res.json({ trailerKey: trailer ? trailer.key : null });
+  } catch (error) {
+    console.log(error);
+
+    res.status(500).json({ error: "Failed to fetch trailer" });
+  }
+};
+
+const getCredits = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const response = await axios.get(
+      `${TMDB_API_BASE_URL}/movie/${id}/credits?language=en-US`,
+      API_OPTIONS
+    );
+    res.json(response.data);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Failed to fetch credits" });
+  }
+};
+
+const getProviders = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const region = req.query.region || "US";
+    const response = await axios.get(
+      `${TMDB_API_BASE_URL}/movie/${id}/watch/providers`,
+      API_OPTIONS
+    );
+    const results = response.data.results[region] || {};
+    const buy = results.buy || [];
+    const rent = results.rent || [];
+
+    //using a set allows for prevention of duplicates
+    const uniqueProviders = [
+      ...new Set([
+        ...buy.map((p) => p.provider_name.replace(/\s/g, "-")),
+        ...rent.map((p) => p.provider_name.replace(/\s/g, "-")),
+      ]),
+    ];
+
+    res.json(response.data);
+  } catch (error) {
+    console.log(error);
+
+    res.status(500).json({ error: "Failed to fetch providers" });
+  }
+};
+
+const discoverMovies = async (req, res) => {
+  try {
+    const { selectedOptions, currentPage, searchBarQuery } = req.body;
+
+    let endpoint = "";
+
+    if (searchBarQuery) {
+      endpoint = `${TMDB_API_BASE_URL}/search/movie?query=${encodeURIComponent(
+        searchBarQuery
+      )}&page=${currentPage}`;
+    } else {
+      let genreIds = selectedOptions.Genres.join("|");
+      let minimumDate = selectedOptions.Eras[0].start;
+      let maximumDate = selectedOptions.Eras[0].end;
+
+      selectedOptions.Eras.forEach((era) => {
+        if (era.start < minimumDate) minimumDate = era.start;
+        if (era.end > maximumDate) maximumDate = era.end;
+      });
+
+      let languages = selectedOptions.Languages.join("|");
+      let runtime = Math.max(...selectedOptions.Runtime);
+
+      const queryParams = new URLSearchParams({
+        with_genres: genreIds,
+        "primary_release_date.gte": minimumDate,
+        "primary_release_date.lte": maximumDate,
+        with_original_language: languages,
+        include_adult: false,
+        "with_runtime.lte": runtime,
+        without_genres: 10749, // no romance
+        sort_by: "popularity.desc",
+        page: currentPage,
+      });
+
+      endpoint = `${TMDB_API_BASE_URL}/discover/movie?${queryParams}`;
+    }
+
+    const tmdbResponse = await fetch(endpoint, API_OPTIONS);
+    const data = await tmdbResponse.json();
+
+    res.json({
+      results: data.results,
+      total_pages: data.total_pages,
+    });
+  } catch (error) {
+    console.error("Error in discoverMovies:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+const getRandomMovie = async (req, res) => {
+  try {
+    const response = await axios.get(
+      `${TMDB_API_BASE_URL}/movie/latest`,
+      API_OPTIONS
+    );
+    const latestMovieId = response.data.id;
+
+    const movie = await fetchRandomMovie(latestMovieId);
+    if (!movie) {
+      return res.status(404).json({ message: "No valid movie found." });
+    }
+    res.status(200).json({ movie });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Error getting random movie!" });
+  }
+};
+
 module.exports = {
   likeMovie,
   unlikeMovie,
@@ -140,4 +287,10 @@ module.exports = {
   getMovies,
   searchMovies,
   getLikedMoviesFromId,
+  getMovieDetails,
+  getProviders,
+  getTrailer,
+  getCredits,
+  discoverMovies,
+  getRandomMovie,
 };

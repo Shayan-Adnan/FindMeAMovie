@@ -36,12 +36,10 @@ const Card = ({
             {},
             { withCredentials: true }
           );
-          console.log("Movie liked!");
         } else {
-          await axios.delete(`http://localhost:3000/movie/unlikeMovie/${id}`, {
+          await axios.delete(`/movie/unlikeMovie/${id}`, {
             withCredentials: true,
           });
-          console.log("Movie unliked!");
         }
       } catch (error) {
         console.error(error);
@@ -53,7 +51,6 @@ const Card = ({
 
   useEffect(() => {
     if (usersLikedMovies.includes(id.toString())) {
-      console.log("here");
       setLiked(true);
     }
   }, [usersLikedMovies]);

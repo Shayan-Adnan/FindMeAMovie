@@ -30,14 +30,17 @@ const ListsPreview = ({ lists = [], userId }) => {
 
             {/* Section Of Info*/}
             <div className="flex flex-col justify-center ">
-              <h3 className=" text-white text-base sm:text-lg md:text-xl hover:text-green-500 transition duration-300 cursor-pointer">
+              <h3 className=" text-white text-base sm:text-lg md:text-xl hover:text-blue-500 transition duration-300 cursor-pointer">
                 <button onClick={() => loadFullList(list._id)}>
                   {list.title}
                 </button>
               </h3>
 
               {list.description && (
-                <p className="w-xl text-sm sm:text-base text-zinc-400 mt-1 whitespace-pre-line overflow-hidden ">
+                <p
+                  className="w-full sm:max-w-md text-sm sm:text-base text-zinc-400 mt-1 break-words whitespace-pre-wrap max-h-30 overflow-hidden
+"
+                >
                   {list.description}
                 </p>
               )}

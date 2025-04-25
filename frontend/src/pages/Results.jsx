@@ -6,17 +6,6 @@ import Card from "../components/Card";
 import Spinner from "../components/Spinner";
 import ErrorMessageContainer from "../components/ErrorMessageContainer";
 
-const API_BASE_URL = "https://api.themoviedb.org/3";
-const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
-
-const API_OPTIONS = {
-  method: "GET",
-  headers: {
-    accept: "application/json",
-    Authorization: `Bearer ${API_KEY}`,
-  },
-};
-
 const Results = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -43,80 +32,24 @@ const Results = () => {
     }
   };
 
-  const buildTMDBQuery = () => {
-    if (searchBarQuery) {
-      return `${API_BASE_URL}/search/movie?query=${encodeURIComponent(
-        searchBarQuery
-      )}&page=${currentPage}`;
-    }
-
-    let genreIds = "";
-    let minimumDate = selectedOptions.Eras[0].start;
-    let maximumDate = selectedOptions.Eras[0].end;
-    let languages = "";
-    let runtime = "";
-
-    selectedOptions.Genres.forEach((genre, index) => {
-      genreIds += (index === 0 ? "" : "|") + genre;
-    });
-
-    selectedOptions.Eras.forEach((era, index) => {
-      if (era.start < minimumDate) {
-        minimumDate = era.start;
-      }
-      if (era.end > maximumDate) {
-        maximumDate = era.end;
-      }
-    });
-
-    selectedOptions.Languages.forEach((lang, index) => {
-      languages += (index === 0 ? "" : "|") + lang;
-    });
-
-    runtime = Math.max(...selectedOptions.Runtime);
-
-    const queryParams = new URLSearchParams({
-      with_genres: genreIds,
-      "primary_release_date.gte": minimumDate,
-      "primary_release_date.lte": maximumDate,
-      with_original_language: languages,
-      include_adult: false,
-      "with_runtime.lte": runtime,
-      without_genres: 10749,
-      sort_by: "popularity.desc",
-      page: currentPage,
-    });
-
-    return `${API_BASE_URL}/discover/movie?${queryParams}`;
-  };
-
   const fetchMovies = async () => {
     setIsLoading(true);
     setErrorMessage("");
-
-    const endpointURL = buildTMDBQuery();
-
     try {
-      const response = await fetch(endpointURL, API_OPTIONS);
+      const response = await axios.post("/movie/discoverMovies", {
+        selectedOptions,
+        currentPage,
+        searchBarQuery,
+      });
 
-      if (!response.ok) {
-        throw new Error("Failed to fetch movies!");
-      }
+      const { results, total_pages } = response.data;
 
-      const data = await response.json();
-
-      if (data.Response === "False") {
-        setErrorMessage("Error fetching movies. Please try again later.");
-        setMovieList([]);
-        return;
-      }
-
-      setTotalPages(data.total_pages);
-
-      setMovieList(data.results || []);
-    } catch (e) {
-      console.log(e);
+      setMovieList(results || []);
+      setTotalPages(total_pages);
+    } catch (error) {
+      console.error("Error fetching movies:", error);
       setErrorMessage("Error fetching movies. Please try again later.");
+      setMovieList([]);
     } finally {
       setIsLoading(false);
     }

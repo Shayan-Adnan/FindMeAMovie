@@ -87,7 +87,7 @@ const Navbar = () => {
           ) : (
             <>
               <Link
-                to="/"
+                to={`/profile/${user.userId}`}
                 onClick={() => setIsOpen(false)}
                 className="hover:text-cyan-400 transition duration-300"
               >

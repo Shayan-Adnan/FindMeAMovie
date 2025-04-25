@@ -2,6 +2,7 @@ import { useState } from "react";
 import SelectedMoviesPreview from "../components/SelectedMoviesPreview";
 import ListMovieSearch from "../components/ListMovieSearch";
 import axios from "axios";
+const CHAR_LIMIT = 300;
 
 const CreateList = () => {
   const [title, setTitle] = useState("");
@@ -70,6 +71,13 @@ const CreateList = () => {
     setSelectedMovies((prev) => prev.filter((m) => m.id !== id));
   };
 
+  const handleDescriptionChange = (e) => {
+    const value = e.target.value;
+    if (value.length <= CHAR_LIMIT) {
+      setDescription(value);
+    }
+  };
+
   const checkIfListAlreadyExists = async () => {
     try {
       //api call to get list names
@@ -109,12 +117,25 @@ const CreateList = () => {
           />
 
           {/* Description */}
-          <textarea
-            placeholder="Description (optional)"
-            className="p-4 rounded-lg bg-zinc-800 text-white placeholder-zinc-400 h-32 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-          ></textarea>
+
+          <div className="relative">
+            <textarea
+              placeholder="Description"
+              className="p-4 rounded-lg bg-zinc-800 text-white placeholder-zinc-400 h-32 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
+              value={description}
+              onChange={handleDescriptionChange}
+            />
+
+            <p
+              className={`absolute top-1 right-3 text-xs ${
+                description.length >= CHAR_LIMIT * 0.9
+                  ? "text-red-500"
+                  : "text-zinc-400"
+              }`}
+            >
+              {description.length}/{CHAR_LIMIT}
+            </p>
+          </div>
 
           {/* Search & Movie Selector */}
           <div className="flex flex-col gap-6">

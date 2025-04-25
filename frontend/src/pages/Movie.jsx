@@ -5,19 +5,10 @@ import leftArrow from "../assets/left-arrow.png";
 import IconContainer from "../components/IconContainer";
 import ErrorMessageContainer from "../components/ErrorMessageContainer";
 import { regionMap } from "../data/questions";
+import { FaHeart } from "react-icons/fa";
+import axios from "axios";
 
 const Movie = () => {
-  const API_BASE_URL = "https://api.themoviedb.org/3";
-  const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
-
-  const API_OPTIONS = {
-    method: "GET",
-    headers: {
-      accept: "application/json",
-      Authorization: `Bearer ${API_KEY}`,
-    },
-  };
-
   const { id } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
@@ -33,18 +24,13 @@ const Movie = () => {
   const [region, setRegion] = useState("US");
   const [providers, setProviders] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [liked, setLiked] = useState(false);
+  const [hasClicked, setHasClicked] = useState(false);
+  const [usersLikedMovies, setUsersLikedMovies] = useState([]);
 
   const getMovieDetails = async () => {
     try {
-      const endpoint = `${API_BASE_URL}/movie/${id}`;
-
-      const response = await fetch(endpoint, API_OPTIONS);
-
-      if (!response.ok) {
-        throw new Error("Error fetching movie details!");
-      }
-      const data = await response.json();
-
+      const { data } = await axios.get(`/movie/getMovieDetails/${id}`);
       if (data) setMovie(data);
     } catch (e) {
       console.log("Error fetching movie details: ", e);
@@ -53,42 +39,23 @@ const Movie = () => {
 
   const getTrailer = async () => {
     try {
-      const trailerEndpoint = `${API_BASE_URL}/movie/${id}/videos?language=en-US`;
-
-      const response = await fetch(trailerEndpoint, API_OPTIONS);
-
-      if (!response.ok) {
-        throw new Error("Error getting trailer");
-      }
-
-      const data = await response.json();
-
-      const trailer = data.results.find((video) => video.type === "Trailer");
-
-      if (trailer) {
-        setTrailerKey(trailer.key);
+      const { data } = await axios.get(`/movie/getTrailer/${id}`);
+      if (data?.trailerKey) {
+        setTrailerKey(data.trailerKey);
       }
     } catch (e) {
-      console.log(e);
+      console.log("Error getting trailer: ", e);
     } finally {
       setIsLoading(false);
     }
   };
 
   const getCredits = async () => {
-    const endpoint = `${API_BASE_URL}/movie/${id}/credits?language=en-US`;
     try {
-      const response = await fetch(endpoint, API_OPTIONS);
-
-      if (!response.ok) {
-        console.log("Error fetching movie credits");
-      }
-
-      const data = await response.json();
-
+      const { data } = await axios.get(`/movie/getCredits/${id}`);
       if (data) setCredits(data);
     } catch (e) {
-      console.log(e);
+      console.log("Error fetching movie credits: ", e);
     }
   };
 
@@ -98,33 +65,19 @@ const Movie = () => {
 
   const getMovieProviders = async () => {
     try {
-      const endpoint = `${API_BASE_URL}/movie/${id}/watch/providers`;
+      const { data } = await axios.get(`/movie/getProviders/${id}`);
+      const buyProviders = data.results?.[region]?.buy || [];
+      const rentProviders = data.results?.[region]?.rent || [];
 
-      const response = await fetch(endpoint, API_OPTIONS);
-
-      if (!response.ok) {
-        setProviders([]);
-      }
-
-      const data = await response.json();
-
-      const buyProviders = data.results[region].buy;
-      const rentProviders = data.results[region].rent;
-
-      //using a set allows for prevention of duplicates
       const uniqueProviders = new Set([
-        ...buyProviders.map((provider) =>
-          provider.provider_name.replace(/\s/g, "-")
-        ),
-        ...rentProviders.map((provider) =>
-          provider.provider_name.replace(/\s/g, "-")
-        ),
+        ...buyProviders.map((p) => p.provider_name.replace(/\s/g, "-")),
+        ...rentProviders.map((p) => p.provider_name.replace(/\s/g, "-")),
       ]);
 
       setProviders(Array.from(uniqueProviders));
     } catch (e) {
-      setProviders([]);
       console.error("Error getting movie providers", e);
+      setProviders([]);
     }
   };
 
@@ -140,6 +93,27 @@ const Movie = () => {
     }
   };
 
+  const getUsersLikedMovies = async () => {
+    try {
+      const response = await axios.get("/movie/getLikedMovies", {
+        withCredentials: true,
+      });
+
+      const { success, likedMovies } = response.data;
+      if (success) {
+        setUsersLikedMovies(likedMovies);
+      }
+    } catch (error) {
+      console.log("Error getting users liked movies in Results page: ", error);
+    }
+  };
+
+  const handleLike = async (e) => {
+    e.stopPropagation();
+    setLiked((prev) => !prev);
+    setHasClicked(true);
+  };
+
   useEffect(() => {
     getMovieDetails();
   }, [id]);
@@ -148,6 +122,7 @@ const Movie = () => {
     if (!movie) return;
     getTrailer();
     getCredits();
+    getUsersLikedMovies();
   }, [movie]);
 
   useEffect(() => {
@@ -156,6 +131,36 @@ const Movie = () => {
   }, [region]);
 
   useEffect(() => {}, [providers]);
+
+  useEffect(() => {
+    const likeOrUnlikeMovie = async () => {
+      try {
+        //only run this code if the user has actually clicked. without this, the api would be called each time the component mounts
+        if (!hasClicked) return;
+        if (liked) {
+          await axios.post(
+            `/movie/likeMovie/${id}`,
+            {},
+            { withCredentials: true }
+          );
+        } else {
+          await axios.delete(`/movie/unlikeMovie/${id}`, {
+            withCredentials: true,
+          });
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    likeOrUnlikeMovie();
+  }, [liked]);
+
+  useEffect(() => {
+    if (usersLikedMovies.includes(id.toString())) {
+      setLiked(true);
+    }
+  }, [usersLikedMovies]);
 
   return (
     <div className="flex flex-col items-center min-h-screen bg-gradient-to-r from-slate-950 to-slate-900 text-white px-6 py-12 shadow-lg space-y-8">
@@ -197,7 +202,12 @@ const Movie = () => {
       {/* Movie Details */}
       {movie && (
         <div className="font-bebas-neue w-full max-w-5xl bg-slate-950 p-6 rounded-lg shadow-lg">
-          <h1 className="text-4xl mb-6 ">{movie.title}</h1>
+          <div className="flex justify-between">
+            <h1 className="text-4xl mb-6 ">{movie.title}</h1>
+            <button onClick={handleLike}>
+              <FaHeart className={liked ? "text-red-700" : "text-slate-300"} />
+            </button>
+          </div>
 
           {/* Poster & Overview */}
           <div className="flex flex-col md:flex-row items-center md:items-start gap-6">

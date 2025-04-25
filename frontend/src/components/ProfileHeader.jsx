@@ -5,7 +5,9 @@ function ProfileHeader({
 }) {
   return (
     <div className="flex items-start gap-4">
-      <img src={avatar} className="rounded-full w-20 h-20" alt="Avatar" />
+      <Link to={`/profile/${userId}`}>
+        <img src={avatar} className="rounded-full w-20 h-20" alt="Avatar" />
+      </Link>
       <div>
         <Link to={`/profile/${userId}`}>
           <h1 className="text-2xl">{name}</h1>

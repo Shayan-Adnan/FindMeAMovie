@@ -21,12 +21,12 @@ const CreateList = () => {
         return;
       }
 
-      // const listAlreadyExists = checkIfListAlreadyExists();
+      const listAlreadyExists = await checkIfListAlreadyExists();
 
-      // if (listAlreadyExists) {
-      //   setSuccessMessage("You already have a list with this name!");
-      //   return;
-      // }
+      if (listAlreadyExists) {
+        setSuccessMessage("You already have a list with this name!");
+        return;
+      }
 
       await axios.post("/list/createList", {
         title,
@@ -80,15 +80,20 @@ const CreateList = () => {
 
   const checkIfListAlreadyExists = async () => {
     try {
-      //api call to get list names
+      const response = await axios.get(`/list/getListNames`);
 
-      if (userListNames.includes(title)) {
-        return true;
+      const { lists } = response.data;
+
+      if (lists.length === 0) return false;
+
+      for (const list of lists) {
+        if (list.title === title) return true;
       }
 
       return false;
     } catch (error) {
       console.log("Error getting user list names", error);
+      return false;
     }
   };
 

@@ -8,4 +8,6 @@ router.get("/getList/:userId/:listId", listController.getList);
 
 router.post("/createList", getUserId, listController.createList);
 
+router.get("/getListNames", getUserId, listController.getListNames);
+
 module.exports = router;

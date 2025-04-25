@@ -60,7 +60,7 @@ const Profile = () => {
   }
 
   return (
-    <div className="min-h-screen bg-zinc-900 text-white px-4 py-8 flex flex-col font-bebas-neue">
+    <div className="min-h-screen bg-gradient-to-r from-slate-950 to-slate-900 text-white px-4 py-8 flex flex-col font-bebas-neue">
       <div className="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-4 gap-8 flex-grow">
         {/* Main content */}
         <div className="lg:col-span-3 space-y-6">

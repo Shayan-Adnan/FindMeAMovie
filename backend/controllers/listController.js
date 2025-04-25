@@ -56,4 +56,22 @@ const getList = async (req, res) => {
   }
 };
 
-module.exports = { createList, getList };
+const getListNames = async (req, res) => {
+  try {
+    const { userId } = req;
+    const user = await User.findOne({ userId });
+
+    const { lists } = user;
+
+    if (!lists) {
+      return res.status(404).json([]);
+    }
+
+    return res.status(200).json({ lists });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({});
+  }
+};
+
+module.exports = { createList, getList, getListNames };

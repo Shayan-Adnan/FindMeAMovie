@@ -1,30 +1,19 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-const TMDB_API_KEY = import.meta.env.VITE_TMDB_API_KEY;
 
 const ListMovieSearch = ({ onSelect }) => {
   const [query, setQuery] = useState("");
   const [debouncedQuery, setDebouncedQuery] = useState("");
   const [results, setResults] = useState([]);
 
-  const API_OPTIONS = {
-    method: "GET",
-    headers: {
-      accept: "application/json",
-      Authorization: `Bearer ${TMDB_API_KEY}`,
-    },
-  };
-
-  // Debounce the query
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedQuery(query);
-    }, 300); // wait 300ms after user stops typing
+    }, 300);
 
     return () => clearTimeout(timer);
   }, [query]);
 
-  // Fetch movies from TMDB when debouncedQuery changes
   useEffect(() => {
     const fetchMovies = async () => {
       if (!debouncedQuery) {
@@ -39,7 +28,16 @@ const ListMovieSearch = ({ onSelect }) => {
 
         const results = response.data.movies.results;
 
-        setResults(results || []);
+        const filteredResults = results.filter((movie) => {
+          const isNotAdult = !movie.adult;
+          const isNotRomance = !movie.genre_ids?.includes(10749);
+          const isInDesiredRegion = movie.original_language === "en";
+
+          console.log(isNotAdult, isNotRomance, isInDesiredRegion);
+          return isNotAdult && isNotRomance && isInDesiredRegion;
+        });
+
+        setResults(filteredResults || []);
       } catch (err) {
         console.error("Error fetching movies:", err);
       }

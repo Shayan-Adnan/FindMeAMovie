@@ -117,7 +117,7 @@ const searchMovies = async (req, res) => {
   try {
     const { debouncedQuery } = req.query;
     const response = await fetch(
-      `https://api.themoviedb.org/3/search/movie?query=${debouncedQuery}`,
+      `https://api.themoviedb.org/3/search/movie?query=${debouncedQuery}&include_adult=false`,
       API_OPTIONS
     );
 

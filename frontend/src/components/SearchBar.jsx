@@ -8,6 +8,7 @@ const SearchBar = () => {
   const handleSearch = (event) => {
     event.preventDefault();
     navigate("/results", { state: { searchBarQuery: searchQuery } });
+    setSearchQuery("");
   };
 
   return (

@@ -125,7 +125,7 @@ const List = ({ likedMovies = false }) => {
           <div className="mt-10 mb-10 flex justify-center items-center gap-2 flex-wrap">
             <button
               onClick={() => goToPage(currentPage - 1)}
-              className="w-25 h-12 text-2xl px-4 py-2 rounded-lg transition bg-gradient-to-r from-indigo-900 to-cyan-600 text-white hover:from-indigo-800 hover:to-cyan-500"
+              className="w-25 h-12 text-2xl px-4 py-2 rounded-lg transition bg-gradient-to-r from-indigo-900 to-cyan-600 text-white hover:from-indigo-800 hover:to-cyan-500 disabled:cursor-not-allowed"
               disabled={currentPage === 1}
             >
               Prev
@@ -147,7 +147,7 @@ const List = ({ likedMovies = false }) => {
 
             <button
               onClick={() => goToPage(currentPage + 1)}
-              className="w-25 h-12 text-2xl px-4 py-2 bg-gradient-to-r from-indigo-900 to-cyan-600 text-white rounded-lg hover:from-indigo-800 hover:to-cyan-500 disabled:bg-gray-600 transition"
+              className="w-25 h-12 text-2xl px-4 py-2 bg-gradient-to-r from-indigo-900 to-cyan-600 text-white rounded-lg hover:from-indigo-800 hover:to-cyan-500 disabled:cursor-not-allowed transition"
               disabled={currentPage === totalPages}
             >
               Next

@@ -4,12 +4,15 @@ import axios from "axios";
 import { useLocation, useNavigate } from "react-router-dom";
 import Card from "../components/Card";
 import Spinner from "../components/Spinner";
+import { IoIosReturnLeft } from "react-icons/io";
+
 import ErrorMessageContainer from "../components/ErrorMessageContainer";
 
 const Results = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { selectedOptions, previousPage, searchBarQuery } = location.state;
+
   const [movieList, setMovieList] = useState([]);
   const [currentPage, setCurrentPage] = useState(previousPage || 1);
   const [totalPages, setTotalPages] = useState(1);
@@ -28,18 +31,26 @@ const Results = () => {
         setUsersLikedMovies(likedMovies);
       }
     } catch (error) {
-      console.log("Error getting users liked movies in Results page: ", error);
+      console.error(
+        "Error getting users liked movies in Results page: ",
+        error
+      );
     }
   };
 
-  const fetchMovies = async () => {
+  const fetchMovies = async (
+    selectedOptionsParam,
+    currentPageParam,
+    searchBarQueryParam
+  ) => {
     setIsLoading(true);
     setErrorMessage("");
+
     try {
       const response = await axios.post("/movie/discoverMovies", {
-        selectedOptions,
-        currentPage,
-        searchBarQuery,
+        selectedOptions: selectedOptionsParam,
+        currentPage: currentPageParam,
+        searchBarQuery: searchBarQueryParam,
       });
 
       const { results, total_pages } = response.data;
@@ -57,13 +68,19 @@ const Results = () => {
 
   const nextPage = () => {
     if (currentPage < totalPages) {
-      setCurrentPage((prev) => prev + 1);
+      const nextPageNumber = currentPage + 1;
+      setCurrentPage(nextPageNumber);
+      fetchMovies(selectedOptions, nextPageNumber, searchBarQuery);
+      window.scrollTo(0, 0);
     }
   };
 
   const prevPage = () => {
     if (currentPage > 1) {
-      setCurrentPage((prev) => prev - 1);
+      const prevPageNumber = currentPage - 1;
+      setCurrentPage(prevPageNumber);
+      fetchMovies(selectedOptions, prevPageNumber, searchBarQuery);
+      window.scrollTo(0, 0);
     }
   };
 
@@ -83,9 +100,15 @@ const Results = () => {
   };
 
   useEffect(() => {
-    fetchMovies();
+    if (!location.state) return;
+
+    const { selectedOptions, previousPage, searchBarQuery } = location.state;
+
+    setCurrentPage(previousPage || 1);
+    fetchMovies(selectedOptions, previousPage || 1, searchBarQuery);
     getUsersLikedMovies();
-  }, [currentPage]);
+    window.scrollTo(0, 0);
+  }, [location.state]);
 
   return (
     <div className="min-h-screen bg-gradient-to-r from-slate-950 to-slate-900 text-white px-6 py-12 shadow-lg space-y-6">
@@ -94,7 +117,8 @@ const Results = () => {
           className="cursor-pointer pr-5 flex items-center"
           onClick={returnHome}
         >
-          <img src="left-arrow.png" className="w-5 h-auto" />
+          {/* <img src="left-arrow.png" className="w-5 h-auto" /> */}
+          <IoIosReturnLeft className="w-5 h-auto text-blue-300" />
         </button>
         <h1 className="font-dm-sans font-bold uppercase text-3xl md:text-4xl tracking-wide bg-gradient-to-r from-indigo-400 to-cyan-400 bg-clip-text text-transparent">
           Results

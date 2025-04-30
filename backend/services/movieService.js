@@ -11,7 +11,7 @@ const API_OPTIONS = {
 
 const fetchRandomMovie = async (latestMovieId, attempts = 0) => {
   try {
-    if (attempts >= 25) {
+    if (attempts >= 75) {
       return null;
     }
 
@@ -39,7 +39,9 @@ const fetchRandomMovie = async (latestMovieId, attempts = 0) => {
       isOfBannedGenre ||
       response.data.origin_country.some((country) =>
         ["JP", "KR", "CN"].includes(country)
-      )
+      ) ||
+      response.data.original_language != "en" ||
+      response.data.popularity < 1
     ) {
       return fetchRandomMovie(latestMovieId, attempts + 1);
     }
@@ -47,7 +49,7 @@ const fetchRandomMovie = async (latestMovieId, attempts = 0) => {
     return response.data;
   } catch (error) {
     if (error.response && error.response.status === 404) {
-      console.log(`Movie with ID not found.`);
+      console.log(`Movie not found. Attempt: `, attempts);
       return fetchRandomMovie(latestMovieId, attempts + 1);
     }
   }

@@ -27,9 +27,11 @@ export const UserProvider = ({ children }) => {
           withCredentials: true,
         });
 
-        login(response.data);
+        if (response.data.success) {
+          login(response.data.userData);
+        }
       } catch (error) {
-        console.log("No user logged in", error);
+        console.log("Error getting user: ", error);
       } finally {
         setLoading(false);
       }

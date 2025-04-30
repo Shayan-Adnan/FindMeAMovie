@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { FaHeart } from "react-icons/fa";
 import axios from "axios";
+import { useUser } from "../context/UserContext";
 
 const Card = ({
   usersLikedMovies,
@@ -18,9 +19,11 @@ const Card = ({
 }) => {
   const [liked, setLiked] = useState(false);
   const [hasClicked, setHasClicked] = useState(false);
+  const { user } = useUser();
 
   const handleLike = async (e) => {
     e.stopPropagation();
+    if (!user) return;
     setLiked((prev) => !prev);
     setHasClicked(true);
   };

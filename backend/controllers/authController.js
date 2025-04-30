@@ -26,7 +26,7 @@ const login = async (req, res) => {
     });
     res.redirect(CLIENT_URL);
   } catch (error) {
-    res.status(500).json({ message: "Unable to login user" });
+    res.redirect(CLIENT_URL);
     console.log("Unable to login user: ", error);
   }
 };
@@ -45,14 +45,27 @@ const logout = async (req, res) => {
 
 const getUser = async (req, res) => {
   try {
+    if (!req.user) {
+      return res.status(200).json({ success: false });
+    }
     const user = await User.findOne({ userId: req.user.userId });
     const { userId, name, avatar, numberOfLikedMovies, likedMovies, lists } =
       user;
 
-    res.json({ userId, name, avatar, numberOfLikedMovies, likedMovies, lists });
+    res.json({
+      success: true,
+      userData: {
+        userId,
+        name,
+        avatar,
+        numberOfLikedMovies,
+        likedMovies,
+        lists,
+      },
+    });
   } catch (error) {
     console.log(error);
-    res.status(401).json({ message: "Unauthorized" });
+    res.status(401).json({ success: false });
   }
 };
 

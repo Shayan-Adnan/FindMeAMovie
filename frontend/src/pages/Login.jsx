@@ -1,14 +1,17 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { FaGoogle, FaFacebook, FaGithub } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../context/UserContext";
+import Spinner from "../components/Spinner";
 const SERVER_URL = import.meta.env.VITE_SERVER_URL;
 
 const Login = () => {
   const { user } = useUser();
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
 
   const login = (provider) => {
+    setIsLoading(true);
     window.location.href = `${SERVER_URL}/auth/login/${provider}`;
   };
 
@@ -17,6 +20,10 @@ const Login = () => {
       navigate("/");
     }
   }, [user]);
+
+  useEffect(() => {
+    setIsLoading(false);
+  }, []);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#0e0e1c] font-bebas-neue">
@@ -32,29 +39,35 @@ const Login = () => {
         <p className="text-center text-gray-400 mb-6">Login with</p>
 
         <div className="space-y-4">
-          <button
-            className="w-full bg-[#2d2d44] hover:bg-gray-700 p-3 rounded-lg flex items-center justify-center gap-2 transition duration-200"
-            onClick={() => login("github")}
-          >
-            <FaGithub className="text-white" />
-            Github
-          </button>
-
-          <button
-            className="w-full bg-[#3b5998] hover:bg-blue-800 p-3 rounded-lg flex items-center justify-center gap-2 transition duration-200"
-            onClick={() => login("facebook")}
-          >
-            <FaFacebook className="text-white" />
-            Facebook
-          </button>
-
-          <button
-            className="w-full bg-[#db4437] hover:bg-red-800 p-3 rounded-lg flex items-center justify-center gap-2 transition duration-200"
-            onClick={() => login("google")}
-          >
-            <FaGoogle className="text-white" />
-            Google
-          </button>
+          {isLoading ? (
+            <div className="flex justify-center">
+              <Spinner />
+            </div>
+          ) : (
+            <>
+              <button
+                className="w-full bg-[#2d2d44] hover:bg-gray-700 p-3 rounded-lg flex items-center justify-center gap-2 transition duration-200"
+                onClick={() => login("github")}
+              >
+                <FaGithub className="text-white" />
+                Github
+              </button>
+              <button
+                className="w-full bg-[#3b5998] hover:bg-blue-800 p-3 rounded-lg flex items-center justify-center gap-2 transition duration-200"
+                onClick={() => login("facebook")}
+              >
+                <FaFacebook className="text-white" />
+                Facebook
+              </button>
+              <button
+                className="w-full bg-[#db4437] hover:bg-red-800 p-3 rounded-lg flex items-center justify-center gap-2 transition duration-200"
+                onClick={() => login("google")}
+              >
+                <FaGoogle className="text-white" />
+                Google
+              </button>
+            </>
+          )}
         </div>
       </div>
     </div>

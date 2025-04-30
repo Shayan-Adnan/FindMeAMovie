@@ -2,6 +2,9 @@ const User = require("../models/user");
 
 const createList = async (req, res) => {
   try {
+    if (!req.userId) {
+      return res.status(200).json({ message: "User not logged in." });
+    }
     const { title, description, selectedMovies } = req.body;
     const userId = req.userId;
     const cleanedMovies = selectedMovies.map((movie) => ({

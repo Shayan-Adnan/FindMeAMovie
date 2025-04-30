@@ -13,6 +13,9 @@ const { fetchRandomMovie } = require("../services/movieService");
 
 const likeMovie = async (req, res) => {
   try {
+    if (!req.userId) {
+      return res.status(200).json({ message: "User not logged in." });
+    }
     const movieId = req.params.id;
     await User.findOneAndUpdate(
       { userId: req.userId },
@@ -28,6 +31,9 @@ const likeMovie = async (req, res) => {
 
 const unlikeMovie = async (req, res) => {
   try {
+    if (!req.userId) {
+      return res.status(200).json({ message: "User not logged in." });
+    }
     const movieId = req.params.id;
     await User.findOneAndUpdate(
       { userId: req.userId },
@@ -45,6 +51,10 @@ const unlikeMovie = async (req, res) => {
 const isMovieLiked = async (req, res) => {
   try {
     const movieId = req.params.id;
+    if (!req.userId) {
+      return res.status(200).json({ success: false, liked: false });
+    }
+
     const user = await User.findOne({ userId: req.userId });
 
     if (user.likedMovies.includes(movieId)) {
@@ -60,6 +70,9 @@ const isMovieLiked = async (req, res) => {
 
 const getLikedMovies = async (req, res) => {
   try {
+    if (!req.userId) {
+      return res.status(200).json({ success: false });
+    }
     const user = await User.findOne({ userId: req.userId });
     const { likedMovies } = user;
 
@@ -184,22 +197,11 @@ const getCredits = async (req, res) => {
 const getProviders = async (req, res) => {
   try {
     const { id } = req.params;
-    const region = req.query.region || "US";
+    //const region = req.query.region || "US";
     const response = await axios.get(
       `${TMDB_API_BASE_URL}/movie/${id}/watch/providers`,
       API_OPTIONS
     );
-    const results = response.data.results[region] || {};
-    const buy = results.buy || [];
-    const rent = results.rent || [];
-
-    //using a set allows for prevention of duplicates
-    const uniqueProviders = [
-      ...new Set([
-        ...buy.map((p) => p.provider_name.replace(/\s/g, "-")),
-        ...rent.map((p) => p.provider_name.replace(/\s/g, "-")),
-      ]),
-    ];
 
     res.json(response.data);
   } catch (error) {
@@ -270,7 +272,9 @@ const getRandomMovie = async (req, res) => {
 
     const movie = await fetchRandomMovie(latestMovieId);
     if (!movie) {
-      return res.status(404).json({ message: "No valid movie found." });
+      return res
+        .status(404)
+        .json({ movie: null, message: "No valid movie found." });
     }
     res.status(200).json({ movie });
   } catch (error) {

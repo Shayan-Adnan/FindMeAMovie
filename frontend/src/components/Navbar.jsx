@@ -4,6 +4,7 @@ import { Menu, X } from "lucide-react";
 import { useUser } from "../context/UserContext";
 import { useNavigate } from "react-router-dom";
 import { IoMdLogOut } from "react-icons/io";
+import SearchBar from "../components/SearchBar";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -12,13 +13,12 @@ const Navbar = () => {
 
   const handleLogout = async () => {
     await logout();
-    navigate("/");
   };
 
   return (
-    <nav className="w-full font-bebas-neue bg-gradient-to-r from-slate-900 to-slate-800 shadow-md">
-      <div className="flex items-center justify-between px-6 text-white text-xl">
-        {/* Logo */}
+    <nav className="w-full font-bebas-neue bg-gradient-to-r from-slate-900 to-slate-800 shadow-md relative">
+      <div className="flex items-center justify-between px-6 text-white text-xl h-20 relative">
+        {/* Left - Logo */}
         <Link to="/">
           <div className="flex items-center w-36 md:w-40 h-20 md:h-22">
             <img
@@ -29,7 +29,12 @@ const Navbar = () => {
           </div>
         </Link>
 
-        {/* Desktop Nav */}
+        {/* Center - Search Bar */}
+        <div className="absolute left-1/2 transform -translate-x-1/2 w-64 md:w-96">
+          <SearchBar />
+        </div>
+
+        {/* Right - Desktop Nav */}
         <div className="hidden md:flex items-center space-x-8">
           {!user ? (
             <Link to="/login">

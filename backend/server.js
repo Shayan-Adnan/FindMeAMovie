@@ -7,6 +7,7 @@ const authRoutes = require("./routes/authRoutes");
 const movieRoutes = require("./routes/movieRoutes");
 const userRoutes = require("./routes/userRoutes");
 const listRoutes = require("./routes/listRoutes");
+const reviewRoutes = require("./routes/reviewRoutes");
 const { PORT, BASE_URL, CLIENT_URL } = require("./config/config");
 
 const app = express();
@@ -24,6 +25,7 @@ app.use("/auth", authRoutes);
 app.use("/movie", movieRoutes);
 app.use("/user", userRoutes);
 app.use("/list", listRoutes);
+app.use("/review", reviewRoutes);
 
 connectDatabase();
 

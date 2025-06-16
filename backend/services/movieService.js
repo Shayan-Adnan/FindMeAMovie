@@ -9,9 +9,10 @@ const API_OPTIONS = {
   },
 };
 
-const fetchRandomMovie = async (latestMovieId, attempts = 0) => {
+const fetchRandomMovie = async (latestMovieId, attempts = 1) => {
   try {
     if (attempts >= 75) {
+      console.log("Max attempts reached.");
       return null;
     }
 
@@ -41,8 +42,9 @@ const fetchRandomMovie = async (latestMovieId, attempts = 0) => {
         ["JP", "KR", "CN"].includes(country)
       ) ||
       response.data.original_language != "en" ||
-      response.data.popularity < 1
+      response.data.popularity < 3
     ) {
+      console.log("Movie does not meet critera. Attempt: ", attempts);
       return fetchRandomMovie(latestMovieId, attempts + 1);
     }
 

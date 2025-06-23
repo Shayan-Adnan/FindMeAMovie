@@ -16,11 +16,12 @@ export default function Footer() {
         <div className="flex flex-col md:flex-row justify-between items-center md:items-start gap-6">
           {/*Links of Navigation Bar*/}
           <div className="flex flex-wrap gap-4 justify-center md:justify-start">
-            {["About", "Contact"].map((item, i) => (
-              <a href="#" key={i} className="hover:text-white text-sm">
-                {item}
-              </a>
-            ))}
+            <Link to="/about">
+              <p className="hover:text-white text-sm">About </p>
+            </Link>
+            <Link to="/contact">
+              <p className="hover:text-white text-sm">Contact Us</p>
+            </Link>
           </div>
 
           {/* Icons */}

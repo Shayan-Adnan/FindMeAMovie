@@ -111,7 +111,7 @@ const List = ({ likedMovies = false }) => {
                   <img
                     src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`}
                     alt={`${movie.title}`}
-                    className="w-full h-[300px] object-cover rounded border border-zinc-800 hover:border-2 hover:border-blue-500 transition-all duration-200 cursor-pointer"
+                    className="w-full h-[300px] object-cover rounded border border-zinc-800 hover:border-2 hover:border-blue-500 hover:scale-105 transition-all duration-200 cursor-pointer"
                   />
                 </div>
                 <div className="mt-1 text-sm text-zinc-300 font-medium">

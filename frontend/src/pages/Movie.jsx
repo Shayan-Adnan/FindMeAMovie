@@ -299,7 +299,7 @@ const Movie = () => {
             <img
               src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
               alt={movie.title}
-              className="w-32 h-auto object-cover rounded-xs"
+              className="w-48 h-auto object-cover rounded-xs hover:scale-150 transition duration-300"
             />
             <p className="text-slate-300 text-xl leading-relaxed">
               {movie.overview}
@@ -428,7 +428,7 @@ const Movie = () => {
                     required
                   ></textarea>
                   <p
-                    className={`absolute top-0 right-1 text-xs ${
+                    className={`absolute top-1 right-1 text-xs ${
                       newReview.length >= REVIEW_CHAR_LIMIT * 0.9
                         ? "text-red-500"
                         : "text-white"
